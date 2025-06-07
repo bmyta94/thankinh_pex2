@@ -6,4 +6,6 @@ load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
 
 target 'Runner' do
   flutter_install_all_ios_pods(flutter_application_path)
+require File.expand_path(File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb'))
+
 end
