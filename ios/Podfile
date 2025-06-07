@@ -12,7 +12,7 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  # ✅ Dòng này sửa lại
+  
   install_all_flutter_pods(File.dirname(File.realpath(__FILE__)))
 
   post_install do |installer|
