@@ -1,0 +1,10 @@
+{
+  "plugins": {
+    "ios": [
+      {
+        "name": "shared_preferences",
+        "path": ".dart_tool/package_config.json"
+      }
+    ]
+  }
+}
