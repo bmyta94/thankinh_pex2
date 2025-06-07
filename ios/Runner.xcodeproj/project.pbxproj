@@ -1,0 +1,51 @@
+// !$*UTF8*$!
+{
+  archiveVersion = 1;
+  classes = {};
+  objectVersion = 52;
+  objects = {
+    /* Begin PBXProject section */
+    001 /* Project object */ = {
+      isa = PBXProject;
+      attributes = {
+        LastUpgradeCheck = 1300;
+        ORGANIZATIONNAME = "Thankinh_Pex";
+      };
+      buildConfigurationList = 002 /* Build config list */;
+      compatibilityVersion = "Xcode 12.0";
+      developmentRegion = en;
+      hasScannedForEncodings = 0;
+      knownRegions = (en,);
+      mainGroup = 003;
+      targets = (004,);
+    };
+    /* End PBXProject section */
+
+    /* Begin PBXNativeTarget section */
+    004 = {
+      isa = PBXNativeTarget;
+      name = Runner;
+      productType = "com.apple.product-type.application";
+      buildConfigurationList = 005;
+    };
+    /* End PBXNativeTarget section */
+
+    /* Begin XCConfigurationList section */
+    002 = {
+      isa = XCConfigurationList;
+      buildConfigurations = (006, 007, 008);
+    };
+    005 = {
+      isa = XCConfigurationList;
+      buildConfigurations = (006, 007, 008);
+    };
+    /* End XCConfigurationList section */
+
+    /* Begin XCBuildConfiguration section */
+    006 = { isa = XCBuildConfiguration; name = Debug; };
+    007 = { isa = XCBuildConfiguration; name = Release; };
+    008 = { isa = XCBuildConfiguration; name = Profile; };
+    /* End XCBuildConfiguration section */
+  };
+  rootObject = 001;
+}
