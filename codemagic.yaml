@@ -2,10 +2,12 @@ workflows:
   ios-workflow:
     name: iOS Build
     environment:
-      flutter: stable
+      flutter: "3.22.0"  
+      xcode: "16.3"      
     scripts:
-      - flutter pub get
-      - cd ios && pod install --repo-update && cd ..
+      - flutter clean
+      - gem install cocoapods -v 1.15.2  
+      - cd ios && arch -x86_64 pod install --repo-update && cd .. 
       - flutter build ios --release --no-codesign
     artifacts:
       - build/ios/ipa/*.ipa
