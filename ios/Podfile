@@ -1,7 +1,7 @@
-
+# Uncomment this line to define a global platform for your project
 platform :ios, '12.0'
 
-
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
 project 'Runner', {
@@ -10,18 +10,15 @@ project 'Runner', {
   'Release' => :release,
 }
 
-def flutter_install_ios_plugin_pods(ios_application_path = nil)
-  ios_application_path ||= File.join('..', '..')
-  flutter_root = File.expand_path(File.join(ios_application_path, '..', '..'))
-  load File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper.rb')
-  flutter_install_all_ios_pods(ios_application_path)
-end
+# Load Flutter
+flutter_application_path = File.expand_path(File.join(__dir__, '..'))
+load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
 
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  flutter_install_ios_plugin_pods
+  install_all_flutter_pods(flutter_application_path)
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
