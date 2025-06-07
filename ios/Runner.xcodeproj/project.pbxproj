@@ -6,23 +6,19 @@
   objects = {
 
     /* Begin PBXProject section */
-    001 /* Project object */ = {
+    001 = {
       isa = PBXProject;
       attributes = {
         LastUpgradeCheck = 1300;
         ORGANIZATIONNAME = "Thankinh_Pex";
       };
-      buildConfigurationList = 002 /* Build config list */;
+      buildConfigurationList = 002;
       compatibilityVersion = "Xcode 12.0";
       developmentRegion = en;
       hasScannedForEncodings = 0;
-      knownRegions = (
-        en,
-      );
+      knownRegions = (en, Base);
       mainGroup = 003;
-      targets = (
-        004,
-      );
+      targets = (004);
     };
     /* End PBXProject section */
 
@@ -32,35 +28,59 @@
       name = Runner;
       productType = "com.apple.product-type.application";
       buildConfigurationList = 005;
+      buildPhases = ();
+      buildRules = ();
+      dependencies = ();
     };
     /* End PBXNativeTarget section */
 
     /* Begin XCConfigurationList section */
     002 = {
       isa = XCConfigurationList;
-      buildConfigurations = (
-        006,
-        007,
-        008,
-      );
+      buildConfigurations = (006, 007, 008);
     };
     005 = {
       isa = XCConfigurationList;
-      buildConfigurations = (
-        006,
-        007,
-        008,
-      );
+      buildConfigurations = (006, 007, 008);
     };
     /* End XCConfigurationList section */
 
     /* Begin XCBuildConfiguration section */
-    006 = { isa = XCBuildConfiguration; name = Debug; };
-    007 = { isa = XCBuildConfiguration; name = Release; };
-    008 = { isa = XCBuildConfiguration; name = Profile; };
+    006 = {
+      isa = XCBuildConfiguration;
+      name = Debug;
+      buildSettings = {
+        PRODUCT_BUNDLE_IDENTIFIER = com.bmyta94.thankinhpex;
+        PRODUCT_NAME = $(TARGET_NAME);
+        INFOPLIST_FILE = Runner/Info.plist;
+        SWIFT_VERSION = 5.0;
+        ENABLE_BITCODE = NO;
+      };
+    };
+    007 = {
+      isa = XCBuildConfiguration;
+      name = Release;
+      buildSettings = {
+        PRODUCT_BUNDLE_IDENTIFIER = com.bmyta94.thankinhpex;
+        PRODUCT_NAME = $(TARGET_NAME);
+        INFOPLIST_FILE = Runner/Info.plist;
+        SWIFT_VERSION = 5.0;
+        ENABLE_BITCODE = NO;
+      };
+    };
+    008 = {
+      isa = XCBuildConfiguration;
+      name = Profile;
+      buildSettings = {
+        PRODUCT_BUNDLE_IDENTIFIER = com.bmyta94.thankinhpex;
+        PRODUCT_NAME = $(TARGET_NAME);
+        INFOPLIST_FILE = Runner/Info.plist;
+        SWIFT_VERSION = 5.0;
+        ENABLE_BITCODE = NO;
+      };
+    };
     /* End XCBuildConfiguration section */
 
   };
   rootObject = 001;
 }
-
