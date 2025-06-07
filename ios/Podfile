@@ -12,7 +12,8 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  flutter_install_all_ios_pods(File.dirname(File.realpath(__FILE__)))
+  # ✅ Dòng này sửa lại
+  install_all_flutter_pods(File.dirname(File.realpath(__FILE__)))
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
