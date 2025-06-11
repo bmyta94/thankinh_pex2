@@ -5,10 +5,10 @@ workflows:
       flutter: stable
       xcode: latest
     scripts:
-      - name: Get dependencies
+      - name: Install dependencies
         script: |
           flutter pub get
-      - name: Build iOS
+      - name: Build IPA
         script: |
           flutter build ios --release
     artifacts:
