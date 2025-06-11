@@ -10,6 +10,6 @@ workflows:
           flutter pub get
       - name: Build IPA
         script: |
-          flutter build ios --release
+          flutter build ios --simulator
     artifacts:
       - build/ios/iphoneos/*.ipa
