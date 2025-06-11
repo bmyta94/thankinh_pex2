@@ -28,8 +28,11 @@ class _AppWrapperState extends State<AppWrapper> {
       final sender = data["from"];
       final receivedForm = data["form"];
 
+      // Ép kiểu rõ ràng nếu cần
+      final Map<String, String> parsedForm = Map<String, String>.from(receivedForm);
+
       // Lưu vào bộ nhớ trong (ứng dụng)
-      await YLenhRepository.add({"from": sender, "form": receivedForm});
+      await YLenhRepository.add({"from": sender, "form": parsedForm});
 
       if (_navKey.currentContext == null) return;
 
@@ -46,7 +49,7 @@ class _AppWrapperState extends State<AppWrapper> {
                   _navKey.currentContext!,
                   MaterialPageRoute(
                     builder: (_) => ReadOnlyFormScreen(
-                      formData: Map<String, String>.from(receivedForm),
+                      formData: parsedForm,
                       userTitle: sender.split(" - ").first,
                       userName: sender.split(" - ").last,
                     ),
@@ -139,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                if (nameController.text.isEmpty || signatureController.isEmpty) {
+                if (nameController.text.isEmpty || signatureController.points.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Vui lòng điền đầy đủ thông tin')),
                   );
