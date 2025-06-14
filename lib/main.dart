@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:signature/signature.dart';
 import 'form_screen.dart';
-import 'danh_sach_y_lenh.dart'; // màn hình dành cho điều dưỡng
+import 'danh_sach_y_lenh.dart';
 import 'read_only_form.dart';
 import 'network/wifi_broadcast.dart';
 import 'repository/y_lenh_repository.dart';
@@ -28,155 +28,76 @@ class _AppWrapperState extends State<AppWrapper> {
       final sender = data["from"];
       final receivedForm = data["form"];
 
-      // Ép kiểu rõ ràng nếu cần
       final Map<String, String> parsedForm = Map<String, String>.from(receivedForm);
 
-      // Lưu vào bộ nhớ trong (ứng dụng)
       await YLenhRepository.add({"from": sender, "form": parsedForm});
-
-      if (_navKey.currentContext == null) return;
-
-      showDialog(
-        context: _navKey.currentContext!,
-        builder: (_) => AlertDialog(
-          title: Text("Nhận y lệnh từ $sender"),
-          content: const Text("Bạn có muốn xem không?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(_navKey.currentContext!);
-                Navigator.push(
-                  _navKey.currentContext!,
-                  MaterialPageRoute(
-                    builder: (_) => ReadOnlyFormScreen(
-                      formData: parsedForm,
-                      userTitle: sender.split(" - ").first,
-                      userName: sender.split(" - ").last,
-                    ),
-                  ),
-                );
-              },
-              child: const Text("Xem"),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(_navKey.currentContext!),
-              child: const Text("Hủy"),
-            )
-          ],
-        ),
-      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Thankinh PEX',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.blue,
-      ),
       navigatorKey: _navKey,
-      home: const LoginScreen(),
+      home: LoginScreen(navKey: _navKey),
     );
   }
 }
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final GlobalKey<NavigatorState> navKey;
+  const LoginScreen({super.key, required this.navKey});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController nameController = TextEditingController();
-  final SignatureController signatureController = SignatureController(
-    penStrokeWidth: 2,
-    penColor: Colors.black,
-  );
-
-  String selectedRole = "Bác sĩ";
+  final TextEditingController _controller = TextEditingController();
+  String? _selectedRole;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Đăng nhập')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ListView(
-          children: [
-            const Text('Vai trò'),
-            DropdownButton<String>(
-              value: selectedRole,
-              isExpanded: true,
-              items: const [
-                DropdownMenuItem(value: "Bác sĩ", child: Text("Bác sĩ")),
-                DropdownMenuItem(value: "Điều dưỡng", child: Text("Điều dưỡng")),
-              ],
-              onChanged: (value) {
-                if (value != null) setState(() => selectedRole = value);
-              },
-            ),
-            const SizedBox(height: 16),
-            const Text('Họ tên đầy đủ'),
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Nhập họ tên...',
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                controller: _controller,
+                decoration: const InputDecoration(labelText: 'Họ và tên'),
               ),
-            ),
-            const SizedBox(height: 16),
-            const Text('Chữ ký'),
-            Container(
-              height: 150,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
+              DropdownButton<String>(
+                value: _selectedRole,
+                hint: const Text('Chức danh'),
+                items: const [
+                  DropdownMenuItem(value: 'Bác sĩ', child: Text('Bác sĩ')),
+                  DropdownMenuItem(value: 'Điều dưỡng', child: Text('Điều dưỡng')),
+                ],
+                onChanged: (value) => setState(() => _selectedRole = value),
               ),
-              child: Signature(
-                controller: signatureController,
-                backgroundColor: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                if (nameController.text.isEmpty || signatureController.points.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Vui lòng điền đầy đủ thông tin')),
-                  );
-                  return;
-                }
-
-                // Đăng ký họ tên làm tên thiết bị để gửi qua Wi-Fi
-                WifiBroadcast.register(nameController.text);
-
-                if (selectedRole == "Bác sĩ") {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => PexFormScreen(
-                        userTitle: selectedRole,
-                        userName: nameController.text,
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  if (_selectedRole == 'Bác sĩ') {
+                    widget.navKey.currentState!.pushReplacement(
+                      MaterialPageRoute(
+                        builder: (_) => FormScreen(hoTen: _controller.text),
                       ),
-                    ),
-                  );
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => DanhSachYLenhScreen(
-                        userTitle: selectedRole,
-                        userName: nameController.text,
+                    );
+                  } else if (_selectedRole == 'Điều dưỡng') {
+                    widget.navKey.currentState!.pushReplacement(
+                      MaterialPageRoute(
+                        builder: (_) => DanhSachYLenh(hoTen: _controller.text),
                       ),
-                    ),
-                  );
-                }
-              },
-              child: const Text('Đăng nhập'),
-            ),
-          ],
+                    );
+                  }
+                },
+                child: const Text('Xác nhận'),
+              ),
+            ],
+          ),
         ),
       ),
     );
