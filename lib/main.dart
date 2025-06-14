@@ -33,7 +33,10 @@ class _AppWrapperState extends State<AppWrapper> {
         parsedForm[key.toString()] = value;
       });
 
-      await repo.YLenhRepository.add({"from": sender, "form": parsedForm});
+      await repo.YLenhRepository.add({
+        "from": sender,
+        "form": parsedForm,
+      });
     });
   }
 
@@ -73,4 +76,36 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               DropdownButton<String>(
                 value: _selectedRole,
-                hi
+                hint: const Text('Chức danh'),
+                items: const [
+                  DropdownMenuItem(value: 'Bác sĩ', child: Text('Bác sĩ')),
+                  DropdownMenuItem(value: 'Điều dưỡng', child: Text('Điều dưỡng')),
+                ],
+                onChanged: (value) => setState(() => _selectedRole = value),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  if (_selectedRole == 'Bác sĩ') {
+                    widget.navKey.currentState!.pushReplacement(
+                      MaterialPageRoute(
+                        builder: (_) => FormScreen(hoTen: _controller.text),
+                      ),
+                    );
+                  } else if (_selectedRole == 'Điều dưỡng') {
+                    widget.navKey.currentState!.pushReplacement(
+                      MaterialPageRoute(
+                        builder: (_) => DanhSachYLenh(hoTen: _controller.text),
+                      ),
+                    );
+                  }
+                },
+                child: const Text('Xác nhận'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
