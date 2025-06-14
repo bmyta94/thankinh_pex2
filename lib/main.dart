@@ -4,7 +4,7 @@ import 'form_screen.dart';
 import 'danh_sach_y_lenh.dart';
 import 'read_only_form.dart';
 import 'network/wifi_broadcast.dart';
-import 'repository/y_lenh_repository.dart';
+import 'repository/y_lenh_repository.dart' as repo;
 
 void main() {
   runApp(const AppWrapper());
@@ -30,7 +30,7 @@ class _AppWrapperState extends State<AppWrapper> {
 
       final Map<String, String> parsedForm = Map<String, String>.from(receivedForm);
 
-      await YLenhRepository.add({"from": sender, "form": parsedForm});
+      await repo.YLenhRepository.add({"from": sender, "form": parsedForm});
     });
   }
 
