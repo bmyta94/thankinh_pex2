@@ -33,10 +33,7 @@ class _AppWrapperState extends State<AppWrapper> {
         parsedForm[key.toString()] = value;
       });
 
-      await repo.YLenhRepository.add({
-        "from": sender,
-        "form": parsedForm,
-      });
+      await repo.YLenhRepository.add({"from": sender, "form": parsedForm});
     });
   }
 
