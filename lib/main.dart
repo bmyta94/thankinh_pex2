@@ -6,16 +6,27 @@ import 'read_only_form.dart';
 import 'network/wifi_broadcast.dart';
 import 'repository/y_lenh_repository.dart' as repo;
 
-void main() {
-  runApp(const AppWrapper());
+// Hàm hỗ trợ parse kiểu dữ liệu an toàn
+dynamic safeParse(dynamic value) {
+  if (value == null) return null;
+  if (value is int || value is double || value is bool) return value;
+  
+  final strValue = value.toString();
+  if (strValue.isEmpty) return null;
+  
+  // Kiểm tra nếu là số
+  if (int.tryParse(strValue) != null) return int.parse(strValue);
+  if (double.tryParse(strValue) != null) return double.parse(strValue);
+  
+  // Kiểm tra boolean
+  if (strValue.toLowerCase() == 'true') return true;
+  if (strValue.toLowerCase() == 'false') return false;
+  
+  return strValue;
 }
 
-// Hàm hỗ trợ parse kiểu dữ liệu an toàn
-int safeParseInt(dynamic value, {int defaultValue = 0}) {
-  if (value == null) return defaultValue;
-  if (value is int) return value;
-  if (value is double) return value.toInt();
-  return int.tryParse(value.toString()) ?? defaultValue;
+void main() {
+  runApp(const AppWrapper());
 }
 
 class AppWrapper extends StatefulWidget {
@@ -68,26 +79,10 @@ class _AppWrapperState extends State<AppWrapper> {
     if (formData is Map) {
       formData.forEach((key, value) {
         final String safeKey = key?.toString() ?? 'null_key';
-        
-        // Xử lý kiểu dữ liệu an toàn
-        if (value == null) {
-          result[safeKey] = null;
-        } else if (value is int || value is double) {
-          result[safeKey] = value;
-        } else if (value is bool) {
-          result[safeKey] = value;
-        } else {
-          // Đảm bảo không có trường hợp String -> int trực tiếp
-          final strValue = value.toString();
-          result[safeKey] = _isNumeric(strValue) ? safeParseInt(strValue) : strValue;
-        }
+        result[safeKey] = safeParse(value); // Sử dụng hàm parse an toàn
       });
     }
     return result;
-  }
-
-  bool _isNumeric(String value) {
-    return double.tryParse(value) != null;
   }
 
   @override
