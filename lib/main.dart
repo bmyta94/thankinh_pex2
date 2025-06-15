@@ -28,8 +28,8 @@ class _AppWrapperState extends State<AppWrapper> {
       final sender = data["from"];
       final receivedForm = data["form"];
 
-      final parsedForm = <String, dynamic>{};
-      if (receivedForm is Map) {
+      final Map<String, dynamic> parsedForm = {};
+      if (receivedForm is Map<Object?, Object?>) {
         receivedForm.forEach((key, value) {
           parsedForm[key.toString()] = value;
         });
