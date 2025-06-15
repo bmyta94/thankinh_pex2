@@ -29,8 +29,8 @@ class _AppWrapperState extends State<AppWrapper> {
   void _setupWifiListener() {
     WifiBroadcast.listen((data) async {
       try {
-        if (data is! Map) {
-          debugPrint('Dữ liệu nhận được không phải dạng Map');
+        if (data is! Map<String, dynamic>) {
+          debugPrint('Invalid data format: Expected Map<String, dynamic>');
           return;
         }
 
@@ -38,7 +38,7 @@ class _AppWrapperState extends State<AppWrapper> {
         final receivedForm = data["form"];
 
         if (receivedForm == null) {
-          debugPrint('Không có dữ liệu form');
+          debugPrint('Received null form data');
           return;
         }
 
@@ -49,8 +49,7 @@ class _AppWrapperState extends State<AppWrapper> {
           "form": parsedForm
         });
       } catch (e) {
-        debugPrint("Lỗi xử lý dữ liệu: $e");
-        debugPrint("Dữ liệu gây lỗi: ${data.toString()}");
+        debugPrint("Error processing network data: ${e.toString()}");
       }
     });
   }
@@ -62,17 +61,27 @@ class _AppWrapperState extends State<AppWrapper> {
       formData.forEach((key, value) {
         final String safeKey = key?.toString() ?? 'null_key';
         
-        if (value == null) {
-          result[safeKey] = null;
-        } else if (value is num || value is String || value is bool) {
+        // Xử lý đặc biệt cho kiểu số
+        if (value != null && _isNumeric(value)) {
+          result[safeKey] = value is int ? value : int.tryParse(value.toString());
+        } 
+        // Xử lý kiểu bool
+        else if (value is bool) {
           result[safeKey] = value;
-        } else {
-          result[safeKey] = value.toString();
+        }
+        // Mặc định chuyển về String
+        else {
+          result[safeKey] = value?.toString();
         }
       });
     }
-
     return result;
+  }
+
+  bool _isNumeric(dynamic value) {
+    if (value == null) return false;
+    if (value is num) return true;
+    return double.tryParse(value.toString()) != null;
   }
 
   @override
@@ -156,13 +165,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     if (_selectedRole == 'Bác sĩ') {
-      widget.navKey.currentState!.pushReplacement(
+      widget.navKey.currentState?.pushReplacement(
         MaterialPageRoute(
           builder: (_) => FormScreen(hoTen: _controller.text),
         ),
       );
     } else if (_selectedRole == 'Điều dưỡng') {
-      widget.navKey.currentState!.pushReplacement(
+      widget.navKey.currentState?.pushReplacement(
         MaterialPageRoute(
           builder: (_) => DanhSachYLenh(hoTen: _controller.text),
         ),
