@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:signature/signature.dart';
 import 'form_screen.dart';
@@ -29,8 +28,9 @@ class _AppWrapperState extends State<AppWrapper> {
       final sender = data["from"];
       final receivedForm = data["form"];
 
-      final Map<String, dynamic> parsedForm = {};
-      (receivedForm as Map).forEach((dynamic key, dynamic value) {
+      // Fix ép kiểu triệt để
+      final parsedForm = <String, dynamic>{};
+      (receivedForm as Map<Object?, Object?>).forEach((key, value) {
         parsedForm[key.toString()] = value;
       });
 
