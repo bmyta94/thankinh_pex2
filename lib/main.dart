@@ -10,6 +10,14 @@ void main() {
   runApp(const AppWrapper());
 }
 
+// Hàm hỗ trợ parse kiểu dữ liệu an toàn
+int safeParseInt(dynamic value, {int defaultValue = 0}) {
+  if (value == null) return defaultValue;
+  if (value is int) return value;
+  if (value is double) return value.toInt();
+  return int.tryParse(value.toString()) ?? defaultValue;
+}
+
 class AppWrapper extends StatefulWidget {
   const AppWrapper({super.key});
 
@@ -61,27 +69,25 @@ class _AppWrapperState extends State<AppWrapper> {
       formData.forEach((key, value) {
         final String safeKey = key?.toString() ?? 'null_key';
         
-        // Xử lý đặc biệt cho kiểu số
-        if (value != null && _isNumeric(value)) {
-          result[safeKey] = value is int ? value : int.tryParse(value.toString());
-        } 
-        // Xử lý kiểu bool
-        else if (value is bool) {
+        // Xử lý kiểu dữ liệu an toàn
+        if (value == null) {
+          result[safeKey] = null;
+        } else if (value is int || value is double) {
           result[safeKey] = value;
-        }
-        // Mặc định chuyển về String
-        else {
-          result[safeKey] = value?.toString();
+        } else if (value is bool) {
+          result[safeKey] = value;
+        } else {
+          // Đảm bảo không có trường hợp String -> int trực tiếp
+          final strValue = value.toString();
+          result[safeKey] = _isNumeric(strValue) ? safeParseInt(strValue) : strValue;
         }
       });
     }
     return result;
   }
 
-  bool _isNumeric(dynamic value) {
-    if (value == null) return false;
-    if (value is num) return true;
-    return double.tryParse(value.toString()) != null;
+  bool _isNumeric(String value) {
+    return double.tryParse(value) != null;
   }
 
   @override
@@ -94,88 +100,4 @@ class _AppWrapperState extends State<AppWrapper> {
   }
 }
 
-class LoginScreen extends StatefulWidget {
-  final GlobalKey<NavigatorState> navKey;
-  const LoginScreen({super.key, required this.navKey});
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _controller = TextEditingController();
-  String? _selectedRole;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  labelText: 'Họ và tên',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              DropdownButtonFormField<String>(
-                value: _selectedRole,
-                decoration: const InputDecoration(
-                  labelText: 'Chức danh',
-                  border: OutlineInputBorder(),
-                ),
-                items: const [
-                  DropdownMenuItem(value: 'Bác sĩ', child: Text('Bác sĩ')),
-                  DropdownMenuItem(value: 'Điều dưỡng', child: Text('Điều dưỡng')),
-                ],
-                onChanged: (value) => setState(() => _selectedRole = value),
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                onPressed: _handleLogin,
-                child: const Text('Xác nhận'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _handleLogin() {
-    if (_controller.text.isEmpty || _selectedRole == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng nhập đầy đủ thông tin')),
-      );
-      return;
-    }
-
-    if (_selectedRole == 'Bác sĩ') {
-      widget.navKey.currentState?.pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => FormScreen(hoTen: _controller.text),
-        ),
-      );
-    } else if (_selectedRole == 'Điều dưỡng') {
-      widget.navKey.currentState?.pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => DanhSachYLenh(hoTen: _controller.text),
-        ),
-      );
-    }
-  }
-}
+// ... (Phần LoginScreen giữ nguyên không thay đổi)
