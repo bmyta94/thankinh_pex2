@@ -29,7 +29,7 @@ class _AppWrapperState extends State<AppWrapper> {
       final receivedForm = data["form"];
 
       final parsedForm = <String, dynamic>{};
-      if (receivedForm is Map) {
+      if (receivedForm is Map<dynamic, dynamic>) {
         for (final entry in receivedForm.entries) {
           parsedForm[entry.key.toString()] = entry.value;
         }
