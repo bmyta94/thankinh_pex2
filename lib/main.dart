@@ -28,11 +28,12 @@ class _AppWrapperState extends State<AppWrapper> {
       final sender = data["from"];
       final receivedForm = data["form"];
 
-      // Fix ép kiểu triệt để
       final parsedForm = <String, dynamic>{};
-      (receivedForm as Map<Object?, Object?>).forEach((key, value) {
-        parsedForm[key.toString()] = value;
-      });
+      if (receivedForm is Map) {
+        receivedForm.forEach((key, value) {
+          parsedForm[key.toString()] = value;
+        });
+      }
 
       await repo.YLenhRepository.add({"from": sender, "form": parsedForm});
     });
